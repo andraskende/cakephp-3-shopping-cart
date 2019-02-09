@@ -151,7 +151,20 @@ class ImageComponent extends Component
         $backColor = ImageColorAllocate($dst, 0, 0, 0);
         ImageFilledRectangle($dst, 0, 0, $dst_w, $dst_h, $backColor);
 
-        $src = imagecreatefromjpeg($srcPath);
+        $exploded = explode('.', $image);
+        $ext = $exploded[count($exploded) - 1];
+
+        if (preg_match('/jpg|jpeg/i', $ext)) {
+            $src = imagecreatefromjpeg($srcPath);
+        }else if (preg_match('/png/i', $ext)) {
+            $src = imagecreatefrompng($srcPath);
+        }else if (preg_match('/gif/i', $ext)) {
+            $src = imagecreatefromgif($srcPath);
+        }else if (preg_match('/bmp/i', $ext)) {
+            $src = imagecreatefrombmp($srcPath);
+        }else {
+            $src = imagecreatefromjpeg($srcPath);
+        }
 
         ImageCopyResampled($dst, $src, $dst_x, $dst_y, 0, 0, $new_w, $new_h, $src_w, $src_h);
         imagejpeg($dst, $dstPath, 100);
